@@ -13,12 +13,15 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer render;
     bool isGrounded=true;
     ScoreManager scoreManager;
+    GameOverScript gameOver;
     void Start()
     {
       rb=GetComponent<Rigidbody2D>();
         render=GetComponent<SpriteRenderer>();
         anim=GetComponent<Animator>();
         scoreManager=GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
+        gameOver=GameObject.Find("GameOver").GetComponent<GameOverScript>();
+        //gameOver.gameOverPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -71,12 +74,24 @@ public class PlayerController : MonoBehaviour
             {
                 isGrounded = true;
             }
+            if(collision.gameObject.tag =="Monster")
+        {
+            gameOver.GameOverPanel();
+            Destroy(gameObject);
+        }
           }
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag =="Dimond")
         {
             scoreManager.Score(10);
+            Destroy(collision.gameObject);
+        }
+        if(collision.gameObject.tag =="LastDimond")
+        {
+            scoreManager.Score(50);
+            gameOver.GameOverPanel();
         }
     }
+   
 }
